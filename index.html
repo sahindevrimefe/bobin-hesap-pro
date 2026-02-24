@@ -106,7 +106,23 @@ margin:25px 0;
 border:0;
 border-top:1px solid #333;
 }
+.toggleBox{
+margin-top:25px;
+padding:15px;
+background:#1c1c1c;
+border-radius:12px;
+cursor:pointer;
+}
 
+.toggleContent{
+display:none;
+margin-top:15px;
+}
+
+.smallBtn{
+background:#2962ff;
+margin-top:10px;
+}
 </style>
 </head>
 <body>
@@ -166,7 +182,34 @@ border-top:1px solid #333;
 
 <div class="result" id="planSonuc"></div>
 </div>
+<div class="toggleBox">
+<h3 onclick="toggleEkstra()" style="cursor:pointer;">
+Özel Kesim Hesapları (Tıkla Aç)
+</h3>
 
+<div class="toggleContent" id="ekstraAlan">
+
+<label>Toplam Bobin Kilosu (kg)</label>
+<input type="number" id="ozelKilo">
+
+<label>Toplam Bobin Uzunluğu (m)</label>
+<input type="number" id="ozelToplamMetre">
+
+<label>Kesilen Uzunluk (m)</label>
+<input type="number" id="ozelKesilen">
+
+<button class="smallBtn" onclick="parcaHesapla()">Kesilen Parça Kilosu</button>
+
+<hr>
+
+<button class="smallBtn" onclick="ikiyeBol()">Bobini İkiye Böl (kg/2)</button>
+
+<div class="result" id="ozelSonuc"></div>
+
+</div>
+</div>
+</div>
+</div>
 <script>
 
 let kalanGlobal = 0;
@@ -342,7 +385,42 @@ window.onload = function() {
   document.getElementById("gobek").addEventListener("input", otomatikAnaEt);
   
 }
+function toggleEkstra(){
+let alan = document.getElementById("ekstraAlan");
+alan.style.display = alan.style.display === "block" ? "none" : "block";
+}
 
+function parcaHesapla(){
+
+let kilo = parseFloat(document.getElementById("ozelKilo").value);
+let toplam = parseFloat(document.getElementById("ozelToplamMetre").value);
+let kesilen = parseFloat(document.getElementById("ozelKesilen").value);
+
+if(!kilo || !toplam || !kesilen){
+document.getElementById("ozelSonuc").innerHTML="Bilgileri doldur.";
+return;
+}
+
+let parcaKilo = kilo * (kesilen / toplam);
+
+document.getElementById("ozelSonuc").innerHTML =
+"Kesilen Parça Kilosu: " + parcaKilo.toFixed(1) + " kg";
+}
+
+function ikiyeBol(){
+
+let kilo = parseFloat(document.getElementById("ozelKilo").value);
+
+if(!kilo){
+document.getElementById("ozelSonuc").innerHTML="Önce kilo gir.";
+return;
+}
+
+let yari = kilo / 2;
+
+document.getElementById("ozelSonuc").innerHTML =
+"Yarı Bobin: " + yari.toFixed(1) + " kg";
+}
 </script>
 
 </body>
