@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bobin Hesap Pro</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+font-family: Arial, sans-serif;
+margin:0;
+padding:15px;
+background:#111;
+color:#fff;
+max-width:600px;
+margin:auto;
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+label{
+font-size:14px;
+color:#ccc;
+display:block;
+margin-top:10px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-top:4px;
+border-radius:8px;
+border:none;
+font-size:16px;
+background:#1f1f1f;
+color:#fff;
+}
+
+input:focus{
+outline:none;
+background:#2a2a2a;
+}
+
+button{
+width:100%;
+padding:14px;
+margin-top:15px;
+border:none;
+border-radius:10px;
+background:#00c853;
+color:#fff;
+font-size:16px;
+font-weight:bold;
+}
+
+button:active{
+transform:scale(0.98);
+}
+
+.result{
+margin-top:15px;
+font-size:16px;
+line-height:1.6;
+}
+
+.barBox{
+width:100%;
+height:28px;
+background:#333;
+border-radius:30px;
+margin-top:12px;
+overflow:hidden;
+}
+
+.bar{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#00e676,#00c853);
+text-align:center;
+line-height:28px;
+font-weight:bold;
+transition:0.4s;
+}
+
+.planBox{
+margin-top:25px;
+padding:15px;
+background:#1c1c1c;
+border-radius:12px;
+}
+
+.planBox h3{
+margin-top:0;
+}
+
+hr{
+margin:25px 0;
+border:0;
+border-top:1px solid #333;
+}
+
+</style>
+</head>
+<body>
+
+<h2>Bobin Hesap Pro</h2>
+
+<label>Kilo (kg)</label>
+<input type="number" id="kilo" value="8000">
+
+<label>Genişlik (mm)</label>
+<input type="number" id="genislik" value="1209">
+
+<label>Kalınlık (mm)</label>
+<input type="number" id="kalinlik" value="1.11">
+
+<label>Göbek Çapı (cm)</label>
+<input type="number" id="gobek" value="50.8">
+
+<label>Ana Et Kalınlığı (cm)</label>
+<input type="number" id="fullEt" readonly>
+
+<label>Şu An Et Kalınlığı (cm)</label>
+<input type="number" id="anEt" value="10">
+
+<div class="barBox">
+<div class="bar" id="ilerlemeBar">0%</div>
+</div>
+
+<label>Şu An Saat</label>
+<input type="time" id="ustBasSaat">
+
+<label>Bitmesi Gereken Saat</label>
+<input type="time" id="ustHedefSaat">
+
+<label>Gidilen Hız (m/d)</label>
+<input type="number" id="ustHiz" value="10">
+<button onclick="hesapla()">HESAPLA</button>
+
+<div class="result" id="sonuc"></div>
+
+<div class="planBox">
+<h3>Vardiya Planlayıcı (Opsiyonel)</h3>
+
+<label>Başlangıç Saati</label>
+<input type="time" id="planBas">
+
+<label>Ara Başlangıç</label>
+<input type="time" id="araBas">
+
+<label>Ara Bitiş</label>
+<input type="time" id="araBit">
+
+<label>Hedef Bitiş</label>
+<input type="time" id="planHedef">
+
+<button onclick="planla()">GEREKLİ HIZI HESAPLA</button>
+
+<div class="result" id="planSonuc"></div>
+</div>
+
+<script>
+
+let kalanGlobal = 0;
+
+function otomatikAnaEt(){
+
+let kilo = parseFloat(document.getElementById("kilo").value);
+let genislik = parseFloat(document.getElementById("genislik").value)/1000;
+let kalinlik = parseFloat(document.getElementById("kalinlik").value)/1000;
+let gobekCap = parseFloat(document.getElementById("gobek").value)/100;
+let yogunluk = 7850;
+
+if(!kilo || !genislik || !kalinlik || !gobekCap) return;
+
+let kesit = genislik * kalinlik;
+let metreAgirlik = kesit * yogunluk;
+let toplamMetre = kilo / metreAgirlik;
+
+let r = gobekCap/2;
+let R = Math.sqrt((toplamMetre * kalinlik / Math.PI) + (r*r));
+let anaEt = (R - r) * 100;
+
+document.getElementById("fullEt").value = anaEt.toFixed(1);
+}
+
+function hesapla(){
+
+otomatikAnaEt();
+
+let kilo = parseFloat(document.getElementById("kilo").value);
+let genislik = parseFloat(document.getElementById("genislik").value)/1000;
+let kalinlik = parseFloat(document.getElementById("kalinlik").value)/1000;
+let gobek = parseFloat(document.getElementById("gobek").value)/2;
+let fullEt = parseFloat(document.getElementById("fullEt").value);
+let anEt = parseFloat(document.getElementById("anEt").value);
+
+let yogunluk = 7850;
+
+let kesit = genislik * kalinlik;
+let metreAgirlik = kesit * yogunluk;
+let toplamMetre = kilo / metreAgirlik;
+
+let Rfull = gobek + fullEt;
+let Rnow = gobek + anEt;
+
+let fullAlan = (Rfull*Rfull - gobek*gobek);
+let nowAlan = (Rnow*Rnow - gobek*gobek);
+
+let oran = nowAlan / fullAlan;
+let kalan = toplamMetre * oran;
+
+kalanGlobal = kalan;
+
+let kesilenYuzde = 100 - (oran*100);
+if(kesilenYuzde<0) kesilenYuzde=0;
+if(kesilenYuzde>100) kesilenYuzde=100;
+
+let bar = document.getElementById("ilerlemeBar");
+bar.style.width = kesilenYuzde.toFixed(1)+"%";
+bar.innerHTML = kesilenYuzde.toFixed(1)+"%";
+
+let sonucYazi =
+  "Toplam Metre: " + toplamMetre.toFixed(0) + " m<br>" +
+  "Kalan Metre: " + kalan.toFixed(0) + " m<br>";
+
+let basVal = document.getElementById("ustBasSaat").value;
+let hedefVal = document.getElementById("ustHedefSaat").value;
+let hizVal = parseFloat(document.getElementById("ustHiz").value);
+
+// Bu hızla kaçta biter
+if (basVal && hizVal) {
+  let basSaat = new Date("1970-01-01T" + basVal);
+  let dakika = kalan / hizVal;
+  basSaat.setMinutes(basSaat.getMinutes() + dakika);
+  sonucYazi += "Bu Hızla Bitiş: " + basSaat.toTimeString().slice(0, 5) + "<br>";
+}
+
+// Hedef saate yetişmek için gereken hız
+if (basVal && hedefVal) {
+  let basSaat = new Date("1970-01-01T" + basVal);
+  let hedefSaat = new Date("1970-01-01T" + hedefVal);
+  
+  if (hedefSaat <= basSaat) {
+    hedefSaat.setDate(hedefSaat.getDate() + 1);
+  }
+  
+  let dakikaFark = (hedefSaat - basSaat) / 60000;
+  
+  if (dakikaFark > 0) {
+    let gereken = kalan / dakikaFark;
+    sonucYazi += "Yetişmek İçin Hız: " + gereken.toFixed(1) + " m/d";
+  }
+}
+
+document.getElementById("sonuc").innerHTML = sonucYazi;
+}
+
+function planla(){
+
+let kilo = parseFloat(document.getElementById("kilo").value);
+let genislik = parseFloat(document.getElementById("genislik").value)/1000;
+let kalinlik = parseFloat(document.getElementById("kalinlik").value)/1000;
+let yogunluk = 7850;
+
+if(!kilo || !genislik || !kalinlik){
+document.getElementById("planSonuc").innerHTML="Bobin bilgilerini gir.";
+return;
+}
+
+let kesit = genislik * kalinlik;
+let metreAgirlik = kesit * yogunluk;
+let toplamMetre = kilo / metreAgirlik;
+
+let basVal = document.getElementById("planBas").value;
+let hedefVal = document.getElementById("planHedef").value;
+let araBasVal = document.getElementById("araBas").value;
+let araBitVal = document.getElementById("araBit").value;
+
+if(!basVal || !hedefVal){
+document.getElementById("planSonuc").innerHTML="Başlangıç ve hedef saati gir.";
+return;
+}
+
+let bas = new Date("1970-01-01T"+basVal);
+let hedef = new Date("1970-01-01T"+hedefVal);
+
+if(hedef <= bas){
+hedef.setDate(hedef.getDate()+1);
+}
+
+let toplamDakika = (hedef - bas)/60000;
+let araDakika = 0;
+
+if(araBasVal && araBitVal){
+let araBas = new Date("1970-01-01T"+araBasVal);
+let araBit = new Date("1970-01-01T"+araBitVal);
+
+if(araBit <= araBas){
+araBit.setDate(araBit.getDate()+1);
+}
+
+araDakika = (araBit - araBas)/60000;
+}
+
+let netSure = toplamDakika - araDakika;
+
+if(netSure <= 0){
+document.getElementById("planSonuc").innerHTML="Saatleri kontrol et.";
+return;
+}
+
+let gerekenHiz = toplamMetre / netSure;
+
+// Bu hızla tahmini bitiş
+let tahminiDakika = toplamMetre / gerekenHiz;
+let bitisSaat = new Date(bas);
+bitisSaat.setMinutes(bitisSaat.getMinutes() + tahminiDakika);
+
+document.getElementById("planSonuc").innerHTML =
+"Toplam Metre: "+toplamMetre.toFixed(0)+" m<br>"+
+"Net Çalışma Süresi: "+netSure.toFixed(0)+" dk<br>"+
+"Gerekli Hız: "+gerekenHiz.toFixed(1)+" m/d<br>"+
+"Tahmini Bitiş: "+bitisSaat.toTimeString().slice(0,5);
+
+}
+window.onload = function() {
+  
+  otomatikAnaEt();
+  
+  document.getElementById("kilo").addEventListener("input", otomatikAnaEt);
+  document.getElementById("genislik").addEventListener("input", otomatikAnaEt);
+  document.getElementById("kalinlik").addEventListener("input", otomatikAnaEt);
+  document.getElementById("gobek").addEventListener("input", otomatikAnaEt);
+  
+}
+
+</script>
+
+</body>
+</html>
