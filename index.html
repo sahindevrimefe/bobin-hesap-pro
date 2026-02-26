@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bobin Hesap Pro V2.2</title>
+    <title>Bobin Hesap Pro V2.5 - Animasyonlu</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,6 +14,7 @@
             --text-secondary: #94a3b8;
             --input-bg: #334155;
             --primary-btn: #3b82f6;
+            --coil-color: #94a3b8;
         }
 
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
@@ -40,6 +41,57 @@
 
         input:focus { outline: none; border-color: var(--primary-btn); }
         input[readonly] { background: #0f172a; color: var(--accent-color); font-weight: bold; }
+
+        /* --- ANİMASYON STİLLERİ --- */
+        .visual-transfer {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 100px;
+            margin-bottom: 15px;
+            padding: 0 10px;
+            position: relative;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+        }
+
+        .coil-wrapper { display: flex; flex-direction: column; align-items: center; width: 80px; z-index: 2; }
+        .coil-label { font-size: 9px; color: var(--text-secondary); margin-bottom: 4px; font-weight: bold; }
+
+        .coil-circle {
+            border: 3px solid var(--coil-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s ease;
+            background: radial-gradient(circle, #475569 20%, #1e293b 80%);
+        }
+
+        .coil-core { width: 20px; height: 20px; background: #0f172a; border-radius: 50%; border: 1.5px solid #64748b; }
+
+        .transfer-line {
+            position: absolute;
+            bottom: 25px;
+            left: 70px;
+            right: 70px;
+            height: 3px;
+            background: #64748b;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .transfer-line::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, #fff, transparent);
+            background-size: 60% 100%;
+            animation: moveStrip 1.2s linear infinite;
+        }
+
+        @keyframes moveStrip { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        /* --- ANİMASYON SONU --- */
 
         .progress-container { background: #334155; height: 28px; border-radius: 14px; margin: 15px 0; overflow: hidden; }
         .progress-bar {
@@ -89,6 +141,19 @@
 
     <div class="card">
         <h3>Süreç Takibi</h3>
+
+        <div class="visual-transfer">
+            <div class="coil-wrapper">
+                <div class="coil-label">KALAN</div>
+                <div id="coil-left" class="coil-circle" style="width: 70px; height: 70px;"><div class="coil-core"></div></div>
+            </div>
+            <div class="transfer-line"></div>
+            <div class="coil-wrapper">
+                <div class="coil-label">İŞLENEN</div>
+                <div id="coil-right" class="coil-circle" style="width: 30px; height: 30px;"><div class="coil-core"></div></div>
+            </div>
+        </div>
+
         <label>Şu Anki Et Kalınlığı (cm)</label>
         <input type="number" id="anEt" value="10">
 
@@ -143,33 +208,26 @@
 </div>
 
 <script>
-    // Kaydedilecek inputların listesi
     const storageKeys = ['kilo', 'genislik', 'kalinlik', 'gobek', 'anEt', 'ustHiz', 'molaSure'];
 
-    // Hafızadaki verileri yükle
     function loadData() {
         storageKeys.forEach(key => {
             const savedValue = localStorage.getItem('bobin_' + key);
-            if (savedValue !== null) {
-                document.getElementById(key).value = savedValue;
-            }
+            if (savedValue !== null) document.getElementById(key).value = savedValue;
         });
     }
 
-    // Verileri hafızaya kaydet
     function saveData() {
         storageKeys.forEach(key => {
-            const val = document.getElementById(key).value;
-            localStorage.setItem('bobin_' + key, val);
+            localStorage.setItem('bobin_' + key, document.getElementById(key).value);
         });
     }
 
-    // Tüm inputları dinle
     const allInputs = ['kilo', 'genislik', 'kalinlik', 'gobek', 'anEt', 'ustBasSaat', 'ustHedefSaat', 'ustHiz'];
     allInputs.forEach(id => {
         document.getElementById(id).addEventListener('input', () => {
-            saveData(); // Değişiklik olduğu an kaydet
-            hesapla();  // Ve hesapla
+            saveData();
+            hesapla();
         });
     });
 
@@ -181,10 +239,7 @@
         let anEt = parseFloat(document.getElementById("anEt").value) || 0;
         const yogunluk = 7850;
 
-        if (kilo <= 0 || genislik <= 0 || kalinlik <= 0) {
-            document.getElementById("sonuc").innerHTML = "Lütfen temel bilgileri girin.";
-            return;
-        }
+        if (kilo <= 0 || genislik <= 0 || kalinlik <= 0) return;
 
         let metreAgirlik = genislik * kalinlik * yogunluk;
         let toplamMetre = kilo / metreAgirlik;
@@ -195,14 +250,26 @@
         document.getElementById("fullEt").value = fullEt.toFixed(1);
 
         let R_now = r + (anEt / 100);
-        let oran = (R_now * R_now - r * r) / (R_full * R_full - r * r);
-        let kalanMetre = toplamMetre * oran;
-        let yuzde = Math.max(0, Math.min(100, (1 - oran) * 100));
+        let oranKalan = (R_now * R_now - r * r) / (R_full * R_full - r * r);
+        let yuzdeIslenen = Math.max(0, Math.min(100, (1 - oranKalan) * 100));
+
+        // --- ANİMASYON HESABI ---
+        const minS = 30; // Min çap (px)
+        const maxS = 80; // Max çap (px)
+        let leftS = minS + (maxS - minS) * Math.max(0, Math.min(1, oranKalan));
+        let rightS = minS + (maxS - minS) * (yuzdeIslenen / 100);
+
+        document.getElementById("coil-left").style.width = leftS + "px";
+        document.getElementById("coil-left").style.height = leftS + "px";
+        document.getElementById("coil-right").style.width = rightS + "px";
+        document.getElementById("coil-right").style.height = rightS + "px";
+        // -----------------------
 
         const bar = document.getElementById("ilerlemeBar");
-        bar.style.width = yuzde.toFixed(1) + "%";
-        bar.innerText = "%" + yuzde.toFixed(1);
+        bar.style.width = yuzdeIslenen.toFixed(1) + "%";
+        bar.innerText = "%" + yuzdeIslenen.toFixed(1);
 
+        let kalanMetre = toplamMetre * oranKalan;
         let sonucHTML = `📏 <b>Toplam:</b> ${toplamMetre.toFixed(0)} m | <b>Kalan:</b> ${kalanMetre.toFixed(0)} m<br>`;
         
         let basVal = document.getElementById("ustBasSaat").value;
@@ -210,7 +277,7 @@
         if (basVal && hizVal > 0) {
             let bas = new Date("1970-01-01T" + basVal);
             let bitis = new Date(bas.getTime() + (kalanMetre / hizVal) * 60000);
-            sonucHTML += `⏱️ <b>Bu Hızla Bitiş:</b> <span style="color:#10b981">${bitis.toTimeString().slice(0,5)}</span><br>`;
+            sonucHTML += `⏱️ <b>Bitiş:</b> <span style="color:#10b981">${bitis.toTimeString().slice(0,5)}</span><br>`;
         }
 
         let hedefVal = document.getElementById("ustHedefSaat").value;
@@ -221,7 +288,7 @@
             let dakikaFark = (hedef - bas) / 60000;
             if (dakikaFark > 0) {
                 let gerekenHiz = kalanMetre / dakikaFark;
-                sonucHTML += `🚀 <b>Yetişmek İçin Hız:</b> <span style="color:#f59e0b">${gerekenHiz.toFixed(1)} m/d</span>`;
+                sonucHTML += `🚀 <b>Hedef Hız:</b> <span style="color:#f59e0b">${gerekenHiz.toFixed(1)} m/d</span>`;
             }
         }
         document.getElementById("sonuc").innerHTML = sonucHTML;
@@ -238,10 +305,7 @@
         let hedefVal = document.getElementById("planHedef").value;
         let mola = parseFloat(document.getElementById("molaSure").value) || 0;
 
-        if (!basVal || !hedefVal) {
-            document.getElementById("planSonuc").innerText = "Saatleri girin!";
-            return;
-        }
+        if (!basVal || !hedefVal) return;
 
         let bas = new Date("1970-01-01T" + basVal);
         let hedef = new Date("1970-01-01T" + hedefVal);
@@ -273,11 +337,7 @@
         if (kilo) document.getElementById("ozelSonuc").innerHTML = `Yarı: <b>${(kilo / 2).toFixed(1)} kg</b>`;
     }
 
-    // Sayfa açıldığında verileri yükle ve hesapla
-    window.onload = () => {
-        loadData();
-        hesapla();
-    };
+    window.onload = () => { loadData(); hesapla(); };
 </script>
 
 </body>
