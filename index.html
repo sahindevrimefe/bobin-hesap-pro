@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bobin Hesap Pro V2.5 - Animasyonlu</title>
+    <title>Bobin Hesap Pro V2.6 - Molalı Sistem</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -18,102 +18,37 @@
         }
 
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        
         body { background-color: var(--bg-color); color: var(--text-primary); margin: 0; padding: 20px; display: flex; justify-content: center; }
-
         .container { width: 100%; max-width: 500px; padding-bottom: 50px; }
-
         .header { text-align: center; margin-bottom: 30px; display: flex; flex-direction: column; align-items: center; }
         .header img { width: 64px; height: 64px; border-radius: 12px; margin-bottom: 10px; }
-
         .card { background: var(--card-bg); padding: 20px; border-radius: 16px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
-
         h3 { margin-top: 0; font-size: 1.1rem; color: var(--accent-color); border-bottom: 1px solid #334155; padding-bottom: 10px; margin-bottom: 15px; }
-
         .input-group { margin-bottom: 12px; }
-        
         label { display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 5px; font-weight: 600; }
-
-        input {
-            width: 100%; padding: 12px; border-radius: 8px; border: 2px solid transparent;
-            background: var(--input-bg); color: white; font-size: 1rem;
-        }
-
+        input { width: 100%; padding: 12px; border-radius: 8px; border: 2px solid transparent; background: var(--input-bg); color: white; font-size: 1rem; }
         input:focus { outline: none; border-color: var(--primary-btn); }
         input[readonly] { background: #0f172a; color: var(--accent-color); font-weight: bold; }
 
-        /* --- ANİMASYON STİLLERİ --- */
-        .visual-transfer {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            height: 100px;
-            margin-bottom: 15px;
-            padding: 0 10px;
-            position: relative;
-            background: rgba(0,0,0,0.2);
-            border-radius: 12px;
-        }
-
+        /* --- ANİMASYON --- */
+        .visual-transfer { display: flex; align-items: flex-end; justify-content: space-between; height: 100px; margin-bottom: 15px; padding: 0 10px; position: relative; background: rgba(0,0,0,0.2); border-radius: 12px; }
         .coil-wrapper { display: flex; flex-direction: column; align-items: center; width: 80px; z-index: 2; }
         .coil-label { font-size: 9px; color: var(--text-secondary); margin-bottom: 4px; font-weight: bold; }
-
-        .coil-circle {
-            border: 3px solid var(--coil-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.5s ease;
-            background: radial-gradient(circle, #475569 20%, #1e293b 80%);
-        }
-
+        .coil-circle { border: 3px solid var(--coil-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.5s ease; background: radial-gradient(circle, #475569 20%, #1e293b 80%); }
         .coil-core { width: 20px; height: 20px; background: #0f172a; border-radius: 50%; border: 1.5px solid #64748b; }
-
-        .transfer-line {
-            position: absolute;
-            bottom: 25px;
-            left: 70px;
-            right: 70px;
-            height: 3px;
-            background: #64748b;
-            z-index: 1;
-            overflow: hidden;
-        }
-
-        .transfer-line::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, #fff, transparent);
-            background-size: 60% 100%;
-            animation: moveStrip 1.2s linear infinite;
-        }
-
+        .transfer-line { position: absolute; bottom: 25px; left: 70px; right: 70px; height: 3px; background: #64748b; z-index: 1; overflow: hidden; }
+        .transfer-line::after { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, #fff, transparent); background-size: 60% 100%; animation: moveStrip 1.2s linear infinite; }
         @keyframes moveStrip { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-        /* --- ANİMASYON SONU --- */
 
         .progress-container { background: #334155; height: 28px; border-radius: 14px; margin: 15px 0; overflow: hidden; }
-        .progress-bar {
-            height: 100%; background: linear-gradient(90deg, #10b981, #34d399);
-            width: 0%; transition: width 0.4s; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold;
-        }
-
-        .result-box {
-            background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--primary-btn);
-            padding: 15px; border-radius: 4px; margin-top: 10px; font-size: 0.9rem; line-height: 1.6;
-        }
-
-        button {
-            width: 100%; padding: 14px; border-radius: 8px; border: none;
-            background: var(--primary-btn); color: white; font-weight: 700; cursor: pointer; margin-top: 10px;
-        }
-
+        .progress-bar { height: 100%; background: linear-gradient(90deg, #10b981, #34d399); width: 0%; transition: width 0.4s; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; }
+        .result-box { background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--primary-btn); padding: 15px; border-radius: 4px; margin-top: 10px; font-size: 0.9rem; line-height: 1.6; }
+        button { width: 100%; padding: 14px; border-radius: 8px; border: none; background: var(--primary-btn); color: white; font-weight: 700; cursor: pointer; margin-top: 10px; }
         button.secondary { background: var(--accent-color); }
         .toggle-btn { cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
         .toggle-content { display: none; padding-top: 15px; }
-
         .copyright { text-align: center; font-size: 0.7rem; color: var(--text-secondary); margin-top: 20px; }
+        .mola-group { border: 1px dashed #334155; padding: 10px; border-radius: 8px; margin: 10px 0; background: rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -122,7 +57,7 @@
     <div class="header">
         <img src="logo.png" alt="Logo">
         <h2 style="margin:0;">Bobin Hesap Pro</h2>
-        <small style="color:var(--text-secondary)">Verileriniz Tarayıcıya Kaydedilir</small>
+        <small style="color:var(--text-secondary)">Akıllı Mola Sistemi Aktif</small>
     </div>
 
     <div class="card">
@@ -133,15 +68,11 @@
             <div class="input-group"><label>Kalınlık (mm)</label><input type="number" id="kalinlik" placeholder="0"></div>
             <div class="input-group"><label>Göbek Çapı (cm)</label><input type="number" id="gobek" placeholder="0"></div>
         </div>
-        <div class="input-group">
-            <label>Tam Bobin Et Kalınlığı (cm)</label>
-            <input type="number" id="fullEt" readonly>
-        </div>
+        <div class="input-group"><label>Tam Bobin Et Kalınlığı (cm)</label><input type="number" id="fullEt" readonly></div>
     </div>
 
     <div class="card">
         <h3>Süreç Takibi</h3>
-
         <div class="visual-transfer">
             <div class="coil-wrapper">
                 <div class="coil-label">KALAN</div>
@@ -157,18 +88,22 @@
         <label>Şu Anki Et Kalınlığı (cm)</label>
         <input type="number" id="anEt" value="10">
 
-        <div class="progress-container">
-            <div class="progress-bar" id="ilerlemeBar">0%</div>
-        </div>
+        <div class="progress-container"><div class="progress-bar" id="ilerlemeBar">0%</div></div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <div class="input-group"><label>Şu An Saat</label><input type="time" id="ustBasSaat"></div>
             <div class="input-group"><label>Hedef Bitiş</label><input type="time" id="ustHedefSaat"></div>
         </div>
-        <div class="input-group">
-            <label>Gidilen Hız (m/d)</label>
-            <input type="number" id="ustHiz" value="10">
+
+        <div class="mola-group">
+            <label style="color: #f59e0b; font-size: 0.75rem; margin-bottom: 8px;">Mola Varsa Girin (Opsiyonel)</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="input-group"><label>Mola Başla</label><input type="time" id="molaBas"></div>
+                <div class="input-group"><label>Mola Bitir</label><input type="time" id="molaBit"></div>
+            </div>
         </div>
+
+        <div class="input-group"><label>Gidilen Hız (m/d)</label><input type="number" id="ustHiz" value="10"></div>
         <div id="sonuc" class="result-box">Hesaplanıyor...</div>
     </div>
 
@@ -195,20 +130,19 @@
             <span>▼</span>
         </div>
         <div id="ozelAlan" class="toggle-content">
-            <div class="input-group"><label>Toplam Bobin Kilosu (kg)</label><input type="number" id="ozelKilo"></div>
-            <div class="input-group"><label>Toplam Bobin Uzunluğu (m)</label><input type="number" id="ozelToplamMetre"></div>
+            <div class="input-group"><label>Toplam Kilo (kg)</label><input type="number" id="ozelKilo"></div>
+            <div class="input-group"><label>Toplam Uzunluk (m)</label><input type="number" id="ozelToplamMetre"></div>
             <div class="input-group"><label>Kesilen Uzunluk (m)</label><input type="number" id="ozelKesilen"></div>
             <button onclick="parcaHesapla()">KESİLEN PARÇA KİLOSU</button>
-            <button onclick="ikiyeBol()" style="background:transparent; border:1px solid #3b82f6; color:#3b82f6">BOBİNİ İKİYE BÖL</button>
             <div id="ozelSonuc" class="result-box">Sonuç bekliyor...</div>
         </div>
     </div>
 
-    <div class="copyright">© 2026 Devrim Efe Şahin | Kayıt Modu Aktif</div>
+    <div class="copyright">© 2026 Devrim Efe Şahin | Otomatik Kayıt Aktif</div>
 </div>
 
 <script>
-    const storageKeys = ['kilo', 'genislik', 'kalinlik', 'gobek', 'anEt', 'ustHiz', 'molaSure'];
+    const storageKeys = ['kilo', 'genislik', 'kalinlik', 'gobek', 'anEt', 'ustHiz', 'molaSure', 'molaBas', 'molaBit'];
 
     function loadData() {
         storageKeys.forEach(key => {
@@ -223,12 +157,9 @@
         });
     }
 
-    const allInputs = ['kilo', 'genislik', 'kalinlik', 'gobek', 'anEt', 'ustBasSaat', 'ustHedefSaat', 'ustHiz'];
-    allInputs.forEach(id => {
-        document.getElementById(id).addEventListener('input', () => {
-            saveData();
-            hesapla();
-        });
+    // Tüm inputları dinle
+    document.querySelectorAll('input').forEach(inp => {
+        inp.addEventListener('input', () => { saveData(); hesapla(); });
     });
 
     function hesapla() {
@@ -237,58 +168,76 @@
         let kalinlik = (parseFloat(document.getElementById("kalinlik").value) || 0) / 1000;
         let gobekCap = (parseFloat(document.getElementById("gobek").value) || 0) / 100;
         let anEt = parseFloat(document.getElementById("anEt").value) || 0;
-        const yogunluk = 7850;
 
         if (kilo <= 0 || genislik <= 0 || kalinlik <= 0) return;
 
-        let metreAgirlik = genislik * kalinlik * yogunluk;
+        let metreAgirlik = genislik * kalinlik * 7850;
         let toplamMetre = kilo / metreAgirlik;
         let r = gobekCap / 2;
         let R_full = Math.sqrt((toplamMetre * kalinlik / Math.PI) + (r * r));
-        let fullEt = (R_full - r) * 100;
-        
-        document.getElementById("fullEt").value = fullEt.toFixed(1);
+        document.getElementById("fullEt").value = ((R_full - r) * 100).toFixed(1);
 
         let R_now = r + (anEt / 100);
         let oranKalan = (R_now * R_now - r * r) / (R_full * R_full - r * r);
         let yuzdeIslenen = Math.max(0, Math.min(100, (1 - oranKalan) * 100));
 
-        // --- ANİMASYON HESABI ---
-        const minS = 30; // Min çap (px)
-        const maxS = 80; // Max çap (px)
-        let leftS = minS + (maxS - minS) * Math.max(0, Math.min(1, oranKalan));
-        let rightS = minS + (maxS - minS) * (yuzdeIslenen / 100);
-
+        // Animasyon Güncelleme
+        let leftS = 30 + (50 * Math.max(0, Math.min(1, oranKalan)));
+        let rightS = 30 + (50 * (yuzdeIslenen / 100));
         document.getElementById("coil-left").style.width = leftS + "px";
         document.getElementById("coil-left").style.height = leftS + "px";
         document.getElementById("coil-right").style.width = rightS + "px";
         document.getElementById("coil-right").style.height = rightS + "px";
-        // -----------------------
 
         const bar = document.getElementById("ilerlemeBar");
         bar.style.width = yuzdeIslenen.toFixed(1) + "%";
         bar.innerText = "%" + yuzdeIslenen.toFixed(1);
 
         let kalanMetre = toplamMetre * oranKalan;
-        let sonucHTML = `📏 <b>Toplam:</b> ${toplamMetre.toFixed(0)} m | <b>Kalan:</b> ${kalanMetre.toFixed(0)} m<br>`;
+        let sonucHTML = `📏 <b>Kalan:</b> ${kalanMetre.toFixed(0)} m<br>`;
         
         let basVal = document.getElementById("ustBasSaat").value;
+        let hedefVal = document.getElementById("ustHedefSaat").value;
         let hizVal = parseFloat(document.getElementById("ustHiz").value);
+
         if (basVal && hizVal > 0) {
-            let bas = new Date("1970-01-01T" + basVal);
-            let bitis = new Date(bas.getTime() + (kalanMetre / hizVal) * 60000);
+            let bitis = new Date(new Date("1970-01-01T" + basVal).getTime() + (kalanMetre / hizVal) * 60000);
             sonucHTML += `⏱️ <b>Bitiş:</b> <span style="color:#10b981">${bitis.toTimeString().slice(0,5)}</span><br>`;
         }
 
-        let hedefVal = document.getElementById("ustHedefSaat").value;
         if (basVal && hedefVal) {
             let bas = new Date("1970-01-01T" + basVal);
             let hedef = new Date("1970-01-01T" + hedefVal);
             if (hedef <= bas) hedef.setDate(hedef.getDate() + 1);
-            let dakikaFark = (hedef - bas) / 60000;
-            if (dakikaFark > 0) {
-                let gerekenHiz = kalanMetre / dakikaFark;
+            
+            let toplamDakika = (hedef - bas) / 60000;
+            
+            // --- MOLA HESABI ---
+            let mBasVal = document.getElementById("molaBas").value;
+            let mBitVal = document.getElementById("molaBit").value;
+            let molaDakika = 0;
+
+            if (mBasVal && mBitVal) {
+                let mBas = new Date("1970-01-01T" + mBasVal);
+                let mBit = new Date("1970-01-01T" + mBitVal);
+                if (mBit <= mBas) mBit.setDate(mBit.setDate() + 1);
+                
+                // Molanın üretim süresi içinde kalan kısmını bul
+                let cakismaBas = new Date(Math.max(bas, mBas));
+                let cakismaBit = new Date(Math.min(hedef, mBit));
+                
+                if (cakismaBit > cakismaBas) {
+                    molaDakika = (cakismaBit - cakismaBas) / 60000;
+                }
+            }
+
+            let netDakika = toplamDakika - molaDakika;
+            if (netDakika > 0) {
+                let gerekenHiz = kalanMetre / netDakika;
                 sonucHTML += `🚀 <b>Hedef Hız:</b> <span style="color:#f59e0b">${gerekenHiz.toFixed(1)} m/d</span>`;
+                if (molaDakika > 0) {
+                    sonucHTML += ` <small style="font-size:10px; opacity:0.7">(${molaDakika.toFixed(0)} dk mola düşüldü)</small>`;
+                }
             }
         }
         document.getElementById("sonuc").innerHTML = sonucHTML;
@@ -300,21 +249,18 @@
         let kalinlik = parseFloat(document.getElementById("kalinlik").value) / 1000;
         let metreAgirlik = genislik * kalinlik * 7850;
         let toplamMetre = kilo / metreAgirlik;
-
         let basVal = document.getElementById("planBas").value;
         let hedefVal = document.getElementById("planHedef").value;
         let mola = parseFloat(document.getElementById("molaSure").value) || 0;
 
-        if (!basVal || !hedefVal) return;
-
-        let bas = new Date("1970-01-01T" + basVal);
-        let hedef = new Date("1970-01-01T" + hedefVal);
-        if (hedef <= bas) hedef.setDate(hedef.getDate() + 1);
-        let netDakika = ((hedef - bas) / 60000) - mola;
-        
-        if (netDakika > 0) {
-            let gerekenHiz = toplamMetre / netDakika;
-            document.getElementById("planSonuc").innerHTML = `Gereken Hız: <b>${gerekenHiz.toFixed(1)} m/d</b>`;
+        if (basVal && hedefVal) {
+            let bas = new Date("1970-01-01T" + basVal);
+            let hedef = new Date("1970-01-01T" + hedefVal);
+            if (hedef <= bas) hedef.setDate(hedef.getDate() + 1);
+            let netDakika = ((hedef - bas) / 60000) - mola;
+            if (netDakika > 0) {
+                document.getElementById("planSonuc").innerHTML = `Gereken Hız: <b>${(toplamMetre / netDakika).toFixed(1)} m/d</b>`;
+            }
         }
     }
 
@@ -324,17 +270,10 @@
     }
 
     function parcaHesapla() {
-        let kilo = parseFloat(document.getElementById("ozelKilo").value);
-        let toplam = parseFloat(document.getElementById("ozelToplamMetre").value);
-        let kesilen = parseFloat(document.getElementById("ozelKesilen").value);
-        if (kilo && toplam && kesilen) {
-            document.getElementById("ozelSonuc").innerHTML = `Kesilen: <b>${(kilo * (kesilen / toplam)).toFixed(1)} kg</b>`;
-        }
-    }
-
-    function ikiyeBol() {
-        let kilo = parseFloat(document.getElementById("ozelKilo").value);
-        if (kilo) document.getElementById("ozelSonuc").innerHTML = `Yarı: <b>${(kilo / 2).toFixed(1)} kg</b>`;
+        let k = parseFloat(document.getElementById("ozelKilo").value);
+        let t = parseFloat(document.getElementById("ozelToplamMetre").value);
+        let kes = parseFloat(document.getElementById("ozelKesilen").value);
+        if (k && t && kes) document.getElementById("ozelSonuc").innerHTML = `Kesilen: <b>${(k * (kes / t)).toFixed(1)} kg</b>`;
     }
 
     window.onload = () => { loadData(); hesapla(); };
